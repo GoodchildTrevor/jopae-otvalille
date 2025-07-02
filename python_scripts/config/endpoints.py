@@ -1,0 +1,5 @@
+OPEN_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather"
+AMBEE_URL = "/latest/pollen/by-lat-lng?lat={lat}&lng={lon}"
+NOAA_BASE = "https://services.swpc.noaa.gov/products/"
+X_RAY_URL = NOAA_BASE+"10cm-flux-30-day.json"
+GEOMAGNETIC_URL = NOAA_BASE+"noaa-scales.json"
