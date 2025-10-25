@@ -13,7 +13,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "License :: OSI Approved :: MIT License"
 ]
 dependencies = [
     "aiogram>=3.17",
@@ -32,13 +31,4 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/GoodchildTrevor/jopae_otvalille"
-
-[tool.mypy]
-strict = true
-warn_unreachable = true
-warn_no_return = true
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-allow_untyped_defs = true
-disable_error_code = "attr-defined"
+Issues = "https://github.com/GoodchildTrevor/jopae_otvalille/issues"
