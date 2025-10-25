@@ -3,5 +3,7 @@ services:
     build: .
     container_name: jopae-bot
     restart: unless-stopped
+    env_file:
+        - .env
     volumes:
       - ./subscriptions.db:/app/python_scripts/subscriptions.db
