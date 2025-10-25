@@ -1,16 +1,16 @@
 FROM python:3.12-slim
 
-# Устанавливаем рабочую директорию в папку python_scripts
-WORKDIR /app/python_scripts
+# Рабочая директория - корень проекта
+WORKDIR /app
 
-# Копируем файлы зависимостей
-COPY pyproject.toml poetry.lock* /app/
+# Копируем ВСЁ
+COPY . .
 
-# Обновляем pip и устанавливаем зависимости
-RUN pip install --upgrade pip && pip install --no-cache-dir /app
+# Ставим зависимости
+RUN pip install --upgrade pip && pip install --no-cache-dir .
 
-# Копируем исходный код
-COPY . /app
+# Добавляем путь к Python чтобы видел python_scripts
+ENV PYTHONPATH=/app
 
-# Запускаем бота
-CMD ["python", "jopae_tg_bot.py"]
+# Запускаем
+CMD ["python", "python_scripts/jopae_tg_bot.py"]
