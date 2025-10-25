@@ -1,19 +1,19 @@
 FROM python:3.12-slim
 
-# Устанавливаем рабочую директорию в контейнере
-WORKDIR /app
+# Устанавливаем рабочую директорию в папку python_scripts
+WORKDIR /app/python_scripts
 
-# Копируем файлы pyproject.toml и (если есть) poetry.lock
+# Копируем файлы зависимостей
 COPY pyproject.toml poetry.lock* /app/
 
-# Обновляем pip и устанавливаем зависимости из pyproject.toml
-RUN pip install --upgrade pip && pip install --no-cache-dir .
+# Обновляем pip и устанавливаем зависимости
+RUN pip install --upgrade pip && pip install --no-cache-dir /app
 
-# Копируем оставшийся исходный код в рабочую директорию
+# Копируем исходный код
 COPY . /app
 
-# Создаём файл БД, чтобы volume не сломался при первом запуске
+# Создаём файл БД
 RUN touch subscriptions.db
 
-# Указываем команду запуска главного модуля
-CMD ["python", "python_scripts/jopae_tg_bot.py"]
+# Запускаем бота
+CMD ["python", "jopae_tg_bot.py"]
