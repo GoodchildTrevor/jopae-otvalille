@@ -1,0 +1,7 @@
+services:
+  jopae-bot:
+    build: .
+    container_name: jopae-bot
+    restart: unless-stopped
+    volumes:
+      - ./subscriptions.db:/app/python_scripts/subscriptions.db
