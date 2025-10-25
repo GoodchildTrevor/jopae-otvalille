@@ -45,7 +45,7 @@ def get_tg_jopae_message() -> str:
         message = "Сегодня жопа будет на месте\n\n"
 
     message += weather.report
-    message += pollen.report
+    # message += pollen.report
     message += solar.report
     message += geomagnetic.report
 
