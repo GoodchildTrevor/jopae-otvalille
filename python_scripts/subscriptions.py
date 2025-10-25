@@ -1,5 +1,4 @@
 import sqlite3
-
 from python_scripts.config.consts import DB_PATH
 
 
