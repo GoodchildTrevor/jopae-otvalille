@@ -12,8 +12,5 @@ RUN pip install --upgrade pip && pip install --no-cache-dir /app
 # Копируем исходный код
 COPY . /app
 
-# Создаём файл БД
-RUN touch subscriptions.db
-
 # Запускаем бота
 CMD ["python", "jopae_tg_bot.py"]
