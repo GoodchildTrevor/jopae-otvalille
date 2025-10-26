@@ -53,7 +53,7 @@ def get_weather_info():
         direction = wind_direction(weather['wind']['deg'])  # Направление ветра
         speed = weather['wind']['speed']
         feels_like = weather['main']['feels_like']
-        pressure = hpa_to_mmhg(weather['main']['pressure'])
+        pressure = hpa_to_mmhg(weather['main']['grnd_level']) # Фактическое давление (по дефолту - на уровне моря)
         # Сохраняем информацию
         data['main'] = main
         data['feels_like'] = feels_like
