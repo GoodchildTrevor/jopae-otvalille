@@ -1,7 +1,4 @@
-===============
 Jopae otvalille
-===============
-
 
 .. image:: https://img.shields.io/pypi/v/jopae_otvalille.svg
         :target: https://pypi.python.org/pypi/jopae_otvalille
@@ -13,13 +10,10 @@ Jopae otvalille
         :target: https://jopae-otvalille.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-
-
-
-Quick Start
+Начало работы
 -----------
 
-1. **Create a Telegram bot** via `@BotFather <https://t.me/BotFather>`_ and get your token.
+1. **Создайте ТГ-бота** `@BotFather <https://t.me/BotFather>`_ и получите персональный токен.
 2. **Set up environment variables**:
 
    ```bash
