@@ -14,7 +14,7 @@ Jopae otvalille
 -----------
 
 1. **Создайте ТГ-бота** `@BotFather <https://t.me/BotFather>`_ и получите персональный токен.
-2. **Set up environment variables**:
+2. **Настройте переменные окружения**:
 
    ```bash
    cp .env.example .env
