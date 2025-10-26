@@ -16,8 +16,18 @@ Jopae otvalille
 
 
 
-Python Boilerplate contains all the boilerplate you need to create a Python package.
+Quick Start
+-----------
 
+1. **Create a Telegram bot** via `@BotFather <https://t.me/BotFather>`_ and get your token.
+2. **Set up environment variables**:
+
+   ```bash
+   cp .env.example .env
+   # Edit .env:
+   JOPAE_BOT=your_bot_token_here
+   TIMEZONE=Europe/Moscow
+    ```
 
 * Free software: MIT license
 * Documentation: https://jopae-otvalille.readthedocs.io.
