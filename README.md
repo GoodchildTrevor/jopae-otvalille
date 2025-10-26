@@ -3,7 +3,7 @@
 Начало работы
 -----------
 
-1. **Создайте ТГ-бота** `@BotFather <https://t.me/BotFather>`_ и получите персональный токен.
+1. **Создайте ТГ-бота** `@BotFather <https://t.me/BotFather>` и получите персональный токен.
 2. **Настройте переменные окружения**:
 
    ```bash
@@ -19,20 +19,25 @@
     LAT =  ***
     LON =  ***
     ```
+3. **Запустите контейнер**:
+    ```bash
+    docker compose up --d --build
+   ```
+
+Использование
+-------------
+
+**Команды бота:**
+
+- `/start` - Подписаться на ежедневные сообщения
+- `/stop` - Отписаться от рассылки
+- `/help` - Показать справку по командам
+- `/test` - Отправить тестовое сообщение
 
 * Free software: MIT license
-* Documentation: https://jopae-otvalille.readthedocs.io.
-
 
 Features
 --------
 
 * TODO
-
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+*
