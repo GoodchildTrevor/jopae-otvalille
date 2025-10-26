@@ -1,14 +1,4 @@
-Jopae otvalille
-
-.. image:: https://img.shields.io/pypi/v/jopae_otvalille.svg
-        :target: https://pypi.python.org/pypi/jopae_otvalille
-
-.. image:: https://img.shields.io/travis/GoodchildTrevor/jopae_otvalille.svg
-        :target: https://travis-ci.com/GoodchildTrevor/jopae_otvalille
-
-.. image:: https://readthedocs.org/projects/jopae-otvalille/badge/?version=latest
-        :target: https://jopae-otvalille.readthedocs.io/en/latest/?version=latest
-        :alt: Documentation Status
+# Jopae otvalille
 
 Начало работы
 -----------
@@ -17,10 +7,17 @@ Jopae otvalille
 2. **Настройте переменные окружения**:
 
    ```bash
-   cp .env.example .env
-   # Edit .env:
-   JOPAE_BOT=your_bot_token_here
-   TIMEZONE=Europe/Moscow
+    touch .env
+    nano .env
+    OPEN_WEATHER = ***
+    AMBEE = ***
+
+    JOPAE_BOT = ***
+
+    TIMEZONE = ***
+
+    LAT =  ***
+    LON =  ***
     ```
 
 * Free software: MIT license
