@@ -109,7 +109,7 @@ async def restore_scheduled_jobs() -> None:
             scheduler.add_job(
                 send_morning_message,
                 trigger="cron",
-                hour=10,
+                hour=7,
                 minute=0,
                 timezone=timezone,
                 args=[chat_id],
