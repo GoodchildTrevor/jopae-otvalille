@@ -103,7 +103,6 @@ def get_pollen_info():
 
 
 def get_solar_flare_info():
-    """Получение и интерпретация данных о солнечных вспышках."""
     try:
         response = requests.get(X_RAY_URL)
         response.raise_for_status()
@@ -111,11 +110,20 @@ def get_solar_flare_info():
         return f"Ошибка запроса: {e}"
 
     x_ray = response.json()
-    rows = x_ray[1:]  # Пропускаем заголовок
-    latest_record = rows[-1]  # Последняя запись — самая свежая
-    flux_value = latest_record[1]
-    interpretation = interpret_solar_flare_data(flux_value)
+    rows = x_ray[1:]
+    latest_record = rows[-1]
 
+    if isinstance(latest_record, dict):
+        # Dict format — use the correct key name from the API
+        flux_value = latest_record.get("flux") or latest_record.get("flux_observed")
+    else:
+        # List format — original assumption
+        flux_value = latest_record[1]
+
+    if flux_value is None:
+        return "Ошибка: не удалось получить значение потока"
+
+    interpretation = interpret_solar_flare_data(flux_value)
     return {
         'value': flux_value,
         'interpretation': interpretation
