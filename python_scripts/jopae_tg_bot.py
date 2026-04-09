@@ -1,8 +1,7 @@
 import os
-from typing import NoReturn
+import asyncio
 from dotenv import load_dotenv
 
-import asyncio
 import pytz
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
@@ -21,30 +20,33 @@ TIMEZONE: str = os.getenv("TIMEZONE", "UTC")
 
 bot: Bot = Bot(token=TOKEN)
 dp: Dispatcher = Dispatcher()
-scheduler: AsyncIOScheduler = AsyncIOScheduler()
 timezone: pytz.BaseTzInfo = pytz.timezone(TIMEZONE)
+scheduler: AsyncIOScheduler = AsyncIOScheduler(timezone=timezone)
 
 
 async def send_morning_message(chat_id: int) -> None:
     """
-    Отправляет запланированное утреннее сообщение в указанный чат Telegram.
-    Args:
-        chat_id: уникальный идентификатор чата Telegram
-    Raises:
-        Exception: если отправка сообщения не удалась (например, пользователь заблокировал бота)
+    Send a scheduled morning message to the specified Telegram chat.
+
+    :param chat_id: Unique identifier of the Telegram chat.
+    :raises Exception: If message sending fails (e.g., user blocked the bot).
     """
-    text: str = get_tg_jopae_message()
-    await bot.send_message(chat_id, text)
+    try:
+        text: str = get_tg_jopae_message()
+        await bot.send_message(chat_id, text)
+    except Exception as e:
+        print(f"Error sending message to chat {chat_id}: {e}")
 
 
 @dp.message(Command("start"))
 async def start_command(message: Message) -> None:
     """
-    Обрабатывает команду /start: подписывает пользователя на ежедневные сообщения.
-    Добавляет chat_id пользователя в базу данных и создает ежедневное задание на 10:00
-    в настроенном часовом поясе. Обеспечивает идемпотентность с помощью уникального ID задания.
-    Args:
-        message: входящий объект сообщения Telegram
+    Handle the /start command: subscribe the user to daily messages.
+
+    Adds the user's chat_id to the database and creates a daily job at 7:00 AM
+    in the configured timezone. Ensures idempotency using a unique job ID.
+
+    :param message: Incoming Telegram message object.
     """
     chat_id: int = message.chat.id
     add_subscriber(chat_id)
@@ -68,10 +70,11 @@ async def start_command(message: Message) -> None:
 @dp.message(Command("stop"))
 async def stop_command(message: Message) -> None:
     """
-    Обрабатывает команду /stop: отписывает пользователя от ежедневных сообщений.
-    Удаляет chat_id пользователя из базы данных и удаляет запланированное задание.
-    Args:
-        message: входящий объект сообщения Telegram
+    Handle the /stop command: unsubscribe the user from daily messages.
+
+    Removes the user's chat_id from the database and removes the scheduled job.
+
+    :param message: Incoming Telegram message object.
     """
     chat_id: int = message.chat.id
     job_id: str = f"job_{chat_id}"
@@ -82,13 +85,14 @@ async def stop_command(message: Message) -> None:
         pass
 
     remove_subscriber(chat_id)
-    await message.answer("Вы отписались от ежедневных сообщений. Чтобы снова подписаться — отправьте /start.")
+    await message.answer("You have unsubscribed from daily messages. To subscribe again, send /start.")
 
 
 @dp.message(Command("help"))
 async def help_command(message: Message) -> None:
     """
     Handle the /help command: send a description of the bot's functionality.
+
     :param message: Incoming Telegram message object.
     """
     await message.answer(HELP_MESSAGE)
@@ -96,9 +100,10 @@ async def help_command(message: Message) -> None:
 
 async def restore_scheduled_jobs() -> None:
     """
-    Обрабатывает команду /help: отправляет описание функциональности бота.
-    Args:
-        message: входящий объект сообщения Telegram
+    Restore scheduled jobs for all subscribers from the database.
+
+    Iterates through all subscribed chat IDs and adds missing jobs to the scheduler.
+    This ensures jobs persist across bot restarts.
     """
     chat_ids: list[int] = get_all_subscribers()
     restored_count: int = 0
@@ -124,32 +129,39 @@ async def restore_scheduled_jobs() -> None:
 @dp.message(Command("test"))
 async def test_message(message: Message) -> None:
     """
-    Обрабатывает команду /test: отправляет тестовое утреннее сообщение.
-    Функция позволяет проверить работу бота, отправив утреннее сообщение
-    непосредственно в чат без ожидания запланированного времени.
-    После отправки основного сообщения также отправляется подтверждение.
-    Args:
-        message: входящий объект сообщения Telegram
+    Handle the /test command: send a test morning message immediately.
+
+    Allows testing the bot functionality by sending a morning message
+    directly to the chat without waiting for the scheduled time.
+    Sends a confirmation message after the main message.
+
+    :param message: Incoming Telegram message object.
     """
     await send_morning_message(message.chat.id)
-    await message.answer("Тестовое сообщение отправлено.")
+    await message.answer("Test message sent.")
 
 
-async def main() -> NoReturn:
+async def main() -> None:
     """
-    Главная точка входа приложения Telegram бота.
-    Инициализирует базу данных, запускает APScheduler, восстанавливает запланированные задания
-    и начинает опрос обновлений Telegram.
-    При нормальной работе функция не возвращает управление.
+    Main entry point for the Telegram bot application.
+
+    Initializes the database, starts the APScheduler, restores scheduled jobs,
+    and starts polling for Telegram updates.
+    Does not return control during normal operation.
     """
     init_db()
 
-    global scheduler
-    scheduler = AsyncIOScheduler(timezone=timezone)
-    scheduler.start()
+    if not scheduler.running:
+        scheduler.start()
 
     await restore_scheduled_jobs()
-    await dp.start_polling(bot)
+
+    await bot.delete_webhook(drop_pending_updates=True)
+
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await bot.close()
 
 
 if __name__ == "__main__":
